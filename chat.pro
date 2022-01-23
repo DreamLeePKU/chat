@@ -22,6 +22,8 @@ FORMS += \
     mainwindow.ui
 
 INCLUDEPATH += E:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\include
+INCLUDEPATH += E:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\include\opencv
+INCLUDEPATH += E:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\include\opencv2
 LIBS += -LE:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\x64\mingw\bin\libopencv_*.dll
 LIBS += E:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\x64\mingw\lib\libopencv_*
 # Default rules for deployment.
