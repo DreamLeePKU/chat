@@ -18,7 +18,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Chat; }
 QT_END_NAMESPACE
 
-using namespace cv;
+//using namespace cv;
 class Chat : public QMainWindow
 {
     Q_OBJECT
@@ -27,12 +27,13 @@ public:
     Chat(QWidget *parent = nullptr);
     ~Chat();
 
+
 public slots:
     void updataImage();
 private:
     QTimer theTimer;
-    Mat srcImg;
-    VideoCapture cap;
+    cv::Mat srcImg;
+    cv::VideoCapture cap;
     QLabel *ImgLabel;
 
 private:

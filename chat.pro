@@ -11,9 +11,12 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    pic.cpp
+    pic.cpp \
+    receiver.cpp \
+    sender.cpp
 
 HEADERS += \
+    global.h \
     mainwindow.h \
     pic.h
 
@@ -26,6 +29,14 @@ INCLUDEPATH += E:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\include\ope
 INCLUDEPATH += E:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\include\opencv2
 LIBS += -LE:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\x64\mingw\bin\libopencv_*.dll
 LIBS += E:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\x64\mingw\lib\libopencv_*
+# for boost
+DEPENDPATH += E:\op\boost_qt\boost_1_77_0\boost-mingw\bin\lib
+INCLUDEPATH += E:\op\boost_qt\boost_1_77_0\boost-mingw\bin\include\boost-1_77
+LIBS += -LE:\op\boost_qt\boost_1_77_0\boost-mingw\bin\lib\*
+LIBS += -lws2_32
+#LIBS += -lboost_thread
+LIBS += E:\op\qt\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\x64\mingw\lib\libboost_thread.a
+LIBS += -pthread
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

@@ -1,15 +1,22 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <opencv2\imgproc\types_c.h>
+#include "receiver.cpp"
 
+std::string ip = "127.0.0.1";
+VideoChat demo(ip);
 Chat::Chat(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Chat)
 {
     ui->setupUi(this);
     connect(&theTimer, &QTimer::timeout, this, &Chat::updataImage);
-    if(cap.open(0)) {
-        srcImg = Mat::zeros(cap.get(CAP_PROP_FRAME_HEIGHT),  cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC3);
+//    cv::Mat frame = get_frame();
+//    if(cap.open(0)) {
+//        srcImg = cv::Mat::zeros(cap.get(cv::CAP_PROP_FRAME_HEIGHT),  cap.get(cv::CAP_PROP_FRAME_WIDTH), CV_8UC3);
+//    if(true) {
+//        srcImg = get_frame();
+    if(true) {
         theTimer.start(33);
     }
     ImgLabel = new QLabel(this);
@@ -32,7 +39,8 @@ void Chat::paintEvent(QPaintEvent *e) {
 }
 
 void Chat::updataImage() {
-    cap >> srcImg;
+//    cap >> srcImg;
+    srcImg = get_frame(demo);
     if(srcImg.data) {
         cvtColor(srcImg, srcImg, CV_BGR2RGB);
         this->update();
