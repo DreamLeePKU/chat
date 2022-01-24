@@ -13,12 +13,14 @@ SOURCES += \
     mainwindow.cpp \
     pic.cpp \
     receiver.cpp \
-    sender.cpp
+    send_thread.cpp
 
 HEADERS += \
     global.h \
     mainwindow.h \
-    pic.h
+    pic.h \
+    send_thread.h \
+    sender.h
 
 FORMS += \
     MatdisplayinQt.ui \

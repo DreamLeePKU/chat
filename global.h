@@ -39,5 +39,4 @@ void print(const char* s, std::string end = "\n") {
   std::cout << s << std::endl;
 }
 
-
 #endif // GLOBAL_H

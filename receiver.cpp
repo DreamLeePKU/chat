@@ -1,5 +1,6 @@
-#include "global.h"
+#pragma once
 
+#include "global.h"
 // send ack
 // port1 -> port2 (video data)
 // port2 -> port1 (ack data
@@ -50,16 +51,13 @@ public:
       int apiID = cv::CAP_ANY;
       cap.open(deviceID, apiID);
       if (!cap.isOpened()) { std::cerr << "ERROR! Unable to open camera\n"; }
-  //    cap.read(frame);
       frame = cv::Mat::zeros(cap.get(cv::CAP_PROP_FRAME_HEIGHT),  cap.get(cv::CAP_PROP_FRAME_WIDTH), CV_8UC3);
       cap.release();
       print("grab2");
       resize(frame, frame2, cv::Size(), 0.25, 0.25);
     }
-    // video
     int shrinksize = (frame2.dataend - frame2.datastart);
     recvSocket.receive_from(boost::asio::buffer((char*)frame2.data, shrinksize), ep2);
-//      imshow("receiver", frame2);
     // text
     // while(1) {
     //   recvSocket.receive_from(buffer(recv_data), ep2);

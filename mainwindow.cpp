@@ -1,7 +1,9 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+//#include "ui_mainwindow.h"
 #include <opencv2\imgproc\types_c.h>
-#include "receiver.cpp"
+//#include "receiver.cpp"
+//#include "send_thread.h"
+#include "send_thread.cpp"
 
 std::string ip = "127.0.0.1";
 VideoChat demo(ip);
@@ -24,6 +26,9 @@ Chat::Chat(QWidget *parent)
 //    connect(ui->pushButton, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
 //    connect(ui->checkBox, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
 //    connect(ui->checkBox, &QCheckBox::toggled, this, &Chat::on_checkBox_clicked);
+    send_thread sender_thread;
+    sender_thread.start();
+
 }
 
 void Chat::paintEvent(QPaintEvent *e) {
