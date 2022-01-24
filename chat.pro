@@ -9,16 +9,20 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+  class.cpp \
+    global.cpp \
     main.cpp \
     mainwindow.cpp \
     pic.cpp \
     receiver.cpp \
-    send_thread.cpp
+    send_thread.cpp \
+    sender.cpp
 
 HEADERS += \
     global.h \
     mainwindow.h \
     pic.h \
+    receiver.h \
     send_thread.h \
     sender.h
 

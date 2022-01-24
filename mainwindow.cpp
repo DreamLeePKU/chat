@@ -3,10 +3,20 @@
 #include <opencv2\imgproc\types_c.h>
 //#include "receiver.cpp"
 //#include "send_thread.h"
-#include "send_thread.cpp"
 
-std::string ip = "127.0.0.1";
-VideoChat demo(ip);
+//#include "send_thread.h"
+//#include "sender.h"
+//#include "receiver.h"
+//class send_thread;
+//class VideoChat;
+
+// for debug
+void print(const char* s) {
+//  std::cout << s << end;
+  std::cout << s << std::endl;
+}
+// end
+
 Chat::Chat(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Chat)
@@ -26,12 +36,10 @@ Chat::Chat(QWidget *parent)
 //    connect(ui->pushButton, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
 //    connect(ui->checkBox, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
 //    connect(ui->checkBox, &QCheckBox::toggled, this, &Chat::on_checkBox_clicked);
-    send_thread sender_thread;
     sender_thread.start();
-
 }
 
-void Chat::paintEvent(QPaintEvent *e) {
+void Chat::paintEvent(QPaintEvent * /*e */) {
     // method 1
     QPainter painter(this);
     QImage image1 = QImage((uchar*)(srcImg.data), srcImg.cols, srcImg.rows, QImage::Format_RGB888);
@@ -45,12 +53,19 @@ void Chat::paintEvent(QPaintEvent *e) {
 
 void Chat::updataImage() {
 //    cap >> srcImg;
-    srcImg = get_frame(demo);
+    srcImg = demo.get_frame();
     if(srcImg.data) {
         cvtColor(srcImg, srcImg, CV_BGR2RGB);
         this->update();
     }
 }
+
+
+//cv::Mat Chat::get_frame(VideoChat& demo) {
+//  demo.recv();
+//  return demo.frame2;
+//}
+
 //void Chat::on_pushButton_clicked() {
 //    srcImg = imread("E:/qt/chat/023.jpg");
 //    cvtColor(srcImg, grayImg, CV_BGR2GRAY);
@@ -77,6 +92,6 @@ void Chat::updataImage() {
 //}
 Chat::~Chat()
 {
-    delete ui;
+//    delete ui;
 }
 

@@ -1,8 +1,8 @@
-#pragma once
+//#pragma once
 
 #include "send_thread.h"
 
-//send_thread::send_thread() {  }
+send_thread::send_thread(QObject*parent):QThread(parent) {  }
 
 void send_thread::run() {
 
@@ -15,3 +15,4 @@ void send_thread::run() {
     }
     emit isDone();
 }
+
