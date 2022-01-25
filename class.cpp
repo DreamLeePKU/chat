@@ -7,6 +7,7 @@
 
 #include "receiver.h"
 #include "send_thread.h"
+#include <QAtomicInteger>
 
 //VideoChat demo;
 
@@ -17,3 +18,7 @@ std::string ip = "127.0.0.1";
 VideoChat demo(ip);
 
 send_thread sender_thread;
+
+
+QAtomicInteger<bool> receive_init_end(false);
+//class send_thread;

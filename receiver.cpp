@@ -1,6 +1,8 @@
 //#pragma once
 
 #include "receiver.h"
+#include <QtDebug>
+//#include <QAtomicInteger>
 
 VideoChat::VideoChat(std::string ip1):
   porta(port1),
@@ -23,7 +25,9 @@ void VideoChat::send() { // port2 -> 1
 
 void VideoChat::recv() {
 //    print("receiver start");
+//    std::cout << recvSocket.;
   if(init) {
+    qDebug() << "receiver init...";
     init = 0;
     cv::Mat frame;
     cv::VideoCapture cap;
@@ -35,7 +39,9 @@ void VideoChat::recv() {
     cap.release();
 //    print("grab2");
     resize(frame, frame2, cv::Size(), 0.25, 0.25);
+    qDebug() << "receiver init end";
   }
+  receive_init_end.store(true);
   int shrinksize = (frame2.dataend - frame2.datastart);
   recvSocket.receive_from(boost::asio::buffer((char*)frame2.data, shrinksize), ep2);
 

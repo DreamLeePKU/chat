@@ -1,6 +1,9 @@
 #include "mainwindow.h"
+#include <QtDebug>
+#include <QInputDialog>
 //#include "ui_mainwindow.h"
 #include <opencv2\imgproc\types_c.h>
+#include <QSharedMemory>
 //#include "receiver.cpp"
 //#include "send_thread.h"
 
@@ -19,7 +22,9 @@ void print(const char* s) {
 
 Chat::Chat(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::Chat)
+    , ui(new Ui::Chat),
+    sender_started(false),
+    ready(false)
 {
     ui->setupUi(this);
     connect(&theTimer, &QTimer::timeout, this, &Chat::updataImage);
@@ -28,22 +33,29 @@ Chat::Chat(QWidget *parent)
 //        srcImg = cv::Mat::zeros(cap.get(cv::CAP_PROP_FRAME_HEIGHT),  cap.get(cv::CAP_PROP_FRAME_WIDTH), CV_8UC3);
 //    if(true) {
 //        srcImg = get_frame();
-    if(true) {
-        theTimer.start(33);
-    }
+//    if(sender_started) {
+//        theTimer.start(33);
+//    }
     ImgLabel = new QLabel(this);
     ui->verticalLayout->addWidget(ImgLabel);
+    sender_thread.start();
+    theTimer.start(33);
+
+    connect(ui->inputIP_btn, &QPushButton::clicked, this, &Chat::get_ip);
+    connect(this, &Chat::got_ip, this, &Chat::send_thread_start);
 //    connect(ui->pushButton, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
 //    connect(ui->checkBox, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
 //    connect(ui->checkBox, &QCheckBox::toggled, this, &Chat::on_checkBox_clicked);
-    sender_thread.start();
 }
 
+void Chat::send_thread_start() {
+//  sender_thread.start();
+}
 void Chat::paintEvent(QPaintEvent * /*e */) {
     // method 1
     QPainter painter(this);
     QImage image1 = QImage((uchar*)(srcImg.data), srcImg.cols, srcImg.rows, QImage::Format_RGB888);
-    painter.drawImage(QPoint(20,20), image1);
+    painter.drawImage(QPoint(100,100), image1);
     //    method 2
 //    ImgLabel->setPixmap(QPixmap::fromImage(image1));
 //    ImgLabel->resize(image1.size());
@@ -53,6 +65,8 @@ void Chat::paintEvent(QPaintEvent * /*e */) {
 
 void Chat::updataImage() {
 //    cap >> srcImg;
+    if(!ready) return;
+//    std::cout << "u";
     srcImg = demo.get_frame();
     if(srcImg.data) {
         cvtColor(srcImg, srcImg, CV_BGR2RGB);
@@ -60,11 +74,34 @@ void Chat::updataImage() {
     }
 }
 
+void Chat::get_ip() {
+    bool ok;
+    QString name = QInputDialog::getText(this,
+                                         tr("IP"),
+                                         tr("输入对方IP"),
+                                         QLineEdit::Normal,
+                                         tr("127.0.0.1"),
+                                         &ok);
+    qDebug() << "get ip";
+    target_ip = name.toStdString();
+    sender_started = true;
+    ready = true;
+//    sender_thread.start();
+    emit got_ip();
+//    theTimer.start(33);
 
-//cv::Mat Chat::get_frame(VideoChat& demo) {
-//  demo.recv();
-//  return demo.frame2;
-//}
+    QString sharedMessage(name);
+    QByteArray sharedData = sharedMessage.toLatin1();
+
+    QSharedMemory* sharedMemory = new QSharedMemory("sharedMemoryKey", this);
+    sharedMemory->create(sharedMessage.size());
+
+    sharedMemory->lock();
+    memcpy(sharedMemory->data(), sharedData.data(), sharedData.size());
+    sharedMemory->unlock();
+
+    return;
+}
 
 //void Chat::on_pushButton_clicked() {
 //    srcImg = imread("E:/qt/chat/023.jpg");

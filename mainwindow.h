@@ -32,6 +32,7 @@ QT_END_NAMESPACE
 //std::string ip = "127.0.0.1";
 extern VideoChat demo;
 extern send_thread sender_thread;
+//class send_thread;
 class Chat : public QMainWindow
 {
     Q_OBJECT
@@ -45,6 +46,7 @@ public:
 
 public slots:
     void updataImage();
+    void get_ip();
 private:
     QTimer theTimer;
     cv::Mat srcImg;
@@ -53,12 +55,19 @@ private:
 
 //    send_thread sender_thread;
     Ui::Chat *ui;
+    std::string target_ip;
+    bool sender_started;
+    bool ready;
 //    VideoChat demo;
+//    send_thread sender_thread();
 
 protected:
     void paintEvent(QPaintEvent *e);
 private slots:
 //    void on_checkBox_clicked();
 //    void on_pushButton_clicked();
+    void send_thread_start();
+signals:
+    void got_ip();
 };
 #endif // MAINWINDOW_H

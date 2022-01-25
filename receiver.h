@@ -6,7 +6,9 @@
 
 //#ifndef GLOBAL_H
 //#define GLOBAL_H
+#include <QAtomicInteger>
 
+extern QAtomicInteger<bool> receive_init_end;
 
 #include <boost/bind/bind.hpp>
 #include <boost/asio.hpp>
