@@ -17,65 +17,59 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>690</x>
-      <y>170</y>
-      <width>81</width>
-      <height>18</height>
+      <x>670</x>
+      <y>410</y>
+      <width>111</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="text">
      <string>picture</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>100</y>
-      <width>107</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>gray</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>30</y>
-      <width>101</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>pause</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>90</y>
-      <width>611</width>
-      <height>271</height>
+      <x>450</x>
+      <y>30</y>
+      <width>141</width>
+      <height>131</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
-   <widget class="QPushButton" name="inputIP_btn">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
       <x>650</x>
-      <y>230</y>
-      <width>141</width>
-      <height>41</height>
+      <y>30</y>
+      <width>139</width>
+      <height>131</height>
      </rect>
     </property>
-    <property name="text">
-     <string>输入对方IP地址</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>pause</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string>gray</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="inputIP_btn">
+       <property name="text">
+        <string>输入对方IP地址</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

@@ -50,6 +50,7 @@ public slots:
 private:
     QTimer theTimer;
     cv::Mat srcImg;
+    cv::Mat srcImg_local;
     cv::VideoCapture cap;
     QLabel *ImgLabel;
 

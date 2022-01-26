@@ -1,4 +1,5 @@
 #include "sender.h"
+const bool RESIZE = false;
 
 Sender::Sender(std::string ip1):
   ack(0),
@@ -33,6 +34,9 @@ void Sender::send() {
   //--- GRAB AND WRITE LOOP
   std::cout << "Start grabbing" << std::endl
       << "Press any key to terminate" << std::endl;
+  int frame_24_fractor = 24;
+  // print("input frame rate"); 
+  // cin >> frame_24_fractor; 
   while(true) {
     // video
     ack = 1;
@@ -44,7 +48,11 @@ void Sender::send() {
       }
       // resize(frame, frame2, Size(), 0.01, 0.01);
       // cout << frame2 << endl;
-      resize(frame, frame2, cv::Size(), 0.25, 0.25);
+      if(RESIZE)
+        resize(frame, frame2, cv::Size(), 0.25, 0.25);
+      else {
+        resize(frame, frame2, cv::Size(), 1, 1);
+      }
 
       // imshow("Live", frame);
       // char buf[65535];
@@ -53,7 +61,22 @@ void Sender::send() {
       // break;
       // frame2 = frame;
       int shrinksize = (frame2.dataend - frame2.datastart);
-      sendSocket.send_to(boost::asio::buffer((char*)frame2.data, shrinksize), ep1);
+      if(RESIZE)
+        sendSocket.send_to(boost::asio::buffer((char*)frame2.data, shrinksize), ep1);
+      else {
+          int ack = 31415926; 
+          sendSocket.send_to(boost::asio::buffer(&ack, sizeof(ack)), ep1);
+          int shrinksize_seg  = shrinksize / 16;
+          char buf[65000]; 
+          for(int i = 0;i < 16; ++i) {
+            memset(&buf, 0, sizeof(buf));
+            memcpy(buf, &i, sizeof(int)); 
+            memcpy(buf + sizeof(int), (char*)(frame2.data + i * shrinksize_seg ), shrinksize_seg + sizeof(int)); 
+            sendSocket.send_to(boost::asio::buffer(buf), ep1);
+            Sleep(1000 / frame_24_fractor); 
+            // sendSocket.send_to(boost::asio::buffer((char*)(frame2.data + i * shrinksize_seg), shrinksize_seg), ep1);
+          }
+      }
       // cout << shrinksize << "-=-=";
       // break;
 //      imshow("sender", frame2);

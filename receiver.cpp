@@ -3,7 +3,7 @@
 #include "receiver.h"
 #include <QtDebug>
 //#include <QAtomicInteger>
-
+const bool RESIZE = false;
 VideoChat::VideoChat(std::string ip1):
   porta(port1),
   portb(port2),
@@ -38,12 +38,47 @@ void VideoChat::recv() {
     frame = cv::Mat::zeros(cap.get(cv::CAP_PROP_FRAME_HEIGHT),  cap.get(cv::CAP_PROP_FRAME_WIDTH), CV_8UC3);
     cap.release();
 //    print("grab2");
-    resize(frame, frame2, cv::Size(), 0.25, 0.25);
+    if(RESIZE)
+      resize(frame, frame2, cv::Size(), 0.25, 0.25);
+    else {
+      resize(frame, frame2, cv::Size(), 1, 1);
+    }
     qDebug() << "receiver init end";
   }
   receive_init_end.store(true);
+  cv::Mat tmp_frame = frame2;
+
   int shrinksize = (frame2.dataend - frame2.datastart);
-  recvSocket.receive_from(boost::asio::buffer((char*)frame2.data, shrinksize), ep2);
+  if(RESIZE)
+    recvSocket.receive_from(boost::asio::buffer((char*)frame2.data, shrinksize), ep2);
+  else {
+    int shrinksize_seg  = shrinksize / 16;
+    // 使得每帧图像的起始位置相同
+    int ack = 0;
+    recvSocket.receive_from(boost::asio::buffer(&ack, sizeof(ack)), ep2);
+    qDebug() << ack; 
+    if(ack != 31415926) return;
+    // if(!ack) { qDebug() << "not complete frame"; return; }
+    char buf[65000]; 
+    for(int i = 0; i < 16; ++i) {
+        memset(&buf, 0, sizeof(buf));
+        recvSocket.receive_from(boost::asio::buffer(buf), ep2); 
+        int index = -1; 
+        memcpy(&index, buf, sizeof(int)); 
+        if(index != i) {
+          qDebug() << "wrong at " << i << endl;
+          // memset((char*)(frame2.data), 0, shrinksize); // 接受错误时黑屏
+          frame2 = tmp_frame; // 接受错误时保持原帧
+          break; 
+        }
+        memcpy((char*)(frame2.data + i * shrinksize_seg ),buf + 4, shrinksize_seg); 
+    }
+  }
+
+
+
+
+
 
   // text
   // while(1) {
@@ -59,8 +94,6 @@ void VideoChat::start() {
 
 cv::Mat VideoChat::get_frame() {
   this->recv();
-//  demo.recv();
-//  return demo.frame2;
   return this->frame2;
 }
 
