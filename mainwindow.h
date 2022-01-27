@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QImage>
 #include <opencv.hpp>
+#include <QSharedMemory>
 #include "ui_mainwindow.h"
 //#include "send_thread.h"
 //#include "sender.h"
@@ -47,6 +48,7 @@ public:
 public slots:
     void updataImage();
     void get_ip();
+    void set_frame_rate();
 private:
     QTimer theTimer;
     cv::Mat srcImg;
@@ -59,6 +61,7 @@ private:
     std::string target_ip;
     bool sender_started;
     bool ready;
+    QSharedMemory *sharedMemory;
 //    VideoChat demo;
 //    send_thread sender_thread();
 

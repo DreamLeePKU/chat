@@ -9,6 +9,7 @@
 #include <QAtomicInteger>
 
 extern QAtomicInteger<bool> receive_init_end;
+extern QAtomicInteger<bool> rate_ok;
 
 #include <boost/bind/bind.hpp>
 #include <boost/asio.hpp>
@@ -67,12 +68,15 @@ public:
   boost::asio::ip::udp::socket recvSocket;
   boost::asio::ip::udp::socket sendSocket;
   cv::Mat frame2;
+  int receive_cnt;
+  int error_cnt;
 
   VideoChat(std::string ip1 = "127.0.0.1");
   void send();
   void recv();
   void start();
   cv::Mat get_frame();
+  double receive_error_rate();
 };
 
 

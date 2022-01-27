@@ -21,4 +21,5 @@ send_thread sender_thread;
 
 
 QAtomicInteger<bool> receive_init_end(false);
+QAtomicInteger<bool> rate_ok(true);
 //class send_thread;

@@ -38,13 +38,13 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>650</x>
       <y>30</y>
       <width>139</width>
-      <height>131</height>
+      <height>140</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -52,6 +52,13 @@
       <widget class="QPushButton" name="pushButton">
        <property name="text">
         <string>pause</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="set_frame_rate_btn">
+       <property name="text">
+        <string>设置帧率</string>
        </property>
       </widget>
      </item>

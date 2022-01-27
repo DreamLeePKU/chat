@@ -2,8 +2,11 @@
 #define SENDER_H
 
 #include "receiver.h"
+#include <QtDebug>
 
 extern boost::asio::io_context sender_ioc;
+extern QAtomicInteger<bool> rate_ok;
+
 class Sender {
 public:
   int ack;
@@ -20,6 +23,7 @@ public:
 
   void send();
   void recv();
+  int get_frame_rate();
 };
 
 

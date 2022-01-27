@@ -3,7 +3,6 @@
 #include <QInputDialog>
 //#include "ui_mainwindow.h"
 #include <opencv2\imgproc\types_c.h>
-#include <QSharedMemory>
 //#include "receiver.cpp"
 //#include "send_thread.h"
 
@@ -36,10 +35,13 @@ Chat::Chat(QWidget *parent)
     ImgLabel = new QLabel(this);
     ui->verticalLayout->addWidget(ImgLabel);
     sender_thread.start();
-    theTimer.start(33);
+    theTimer.start(33); // 30 per s
 
     connect(ui->inputIP_btn, &QPushButton::clicked, this, &Chat::get_ip);
+    connect(ui->set_frame_rate_btn, &QPushButton::clicked, this, &Chat::set_frame_rate);
     connect(this, &Chat::got_ip, this, &Chat::send_thread_start);
+    sharedMemory = new QSharedMemory("frame_rate", this);
+
 //    connect(ui->pushButton, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
 //    connect(ui->checkBox, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
 //    connect(ui->checkBox, &QCheckBox::toggled, this, &Chat::on_checkBox_clicked);
@@ -106,6 +108,32 @@ void Chat::get_ip() {
     return;
 }
 
+void Chat::set_frame_rate() {
+
+    bool ok;
+    QString frame_rate = QInputDialog::getText(this,
+                                         tr("frame rate"),
+                                         tr("输入帧率"),
+                                         QLineEdit::Normal,
+                                         tr("12"),
+                                         &ok);
+
+    QString sharedMessage(frame_rate);
+    QByteArray sharedData = sharedMessage.toLatin1();
+
+//    QSharedMemory* sharedMemory = new QSharedMemory("frame_rate", this);
+
+    if(sharedMemory->isAttached()) {
+        sharedMemory->detach();
+    }
+
+    sharedMemory->create(sharedMessage.size());
+
+    sharedMemory->lock();
+    memcpy(sharedMemory->data(), sharedData.data(), sharedData.size());
+    sharedMemory->unlock();
+
+}
 //void Chat::on_pushButton_clicked() {
 //    srcImg = imread("E:/qt/chat/023.jpg");
 //    cvtColor(srcImg, grayImg, CV_BGR2GRAY);

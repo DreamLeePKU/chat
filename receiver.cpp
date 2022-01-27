@@ -11,7 +11,10 @@ VideoChat::VideoChat(std::string ip1):
   ep1(boost::asio::ip::address::from_string(ip1), port3),
   // ep2(ip::address::from_string(ip1), port4),
   recvSocket(ioc, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port1)),
-  sendSocket(ioc, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port2)) {
+  sendSocket(ioc, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port2)),
+  receive_cnt(0),
+  error_cnt(0)
+{
   memset(recv_data, 0, sizeof(recv_data));
 }
 
@@ -26,6 +29,7 @@ void VideoChat::send() { // port2 -> 1
 void VideoChat::recv() {
 //    print("receiver start");
 //    std::cout << recvSocket.;
+  receive_cnt++;
   if(init) {
     qDebug() << "receiver init...";
     init = 0;
@@ -52,11 +56,12 @@ void VideoChat::recv() {
   if(RESIZE)
     recvSocket.receive_from(boost::asio::buffer((char*)frame2.data, shrinksize), ep2);
   else {
+    bool frame_complete = true;
     int shrinksize_seg  = shrinksize / 16;
     // 使得每帧图像的起始位置相同
     int ack = 0;
     recvSocket.receive_from(boost::asio::buffer(&ack, sizeof(ack)), ep2);
-    qDebug() << ack; 
+    qDebug() << ack;
     if(ack != 31415926) return;
     // if(!ack) { qDebug() << "not complete frame"; return; }
     char buf[65000]; 
@@ -68,11 +73,20 @@ void VideoChat::recv() {
         if(index != i) {
           qDebug() << "wrong at " << i << endl;
           // memset((char*)(frame2.data), 0, shrinksize); // 接受错误时黑屏
+          frame_complete = false;
           frame2 = tmp_frame; // 接受错误时保持原帧
           break; 
         }
         memcpy((char*)(frame2.data + i * shrinksize_seg ),buf + 4, shrinksize_seg); 
     }
+    if(!frame_complete) {
+      error_cnt++;
+      double rer = receive_error_rate();
+      if(rer > 0.1) rate_ok.store(false);
+      else rate_ok.store(true);
+      qDebug() << rer;
+    }
+
   }
 
 
@@ -97,5 +111,11 @@ cv::Mat VideoChat::get_frame() {
   return this->frame2;
 }
 
-
+double VideoChat::receive_error_rate() {
+    if(receive_cnt < 100) return 1;
+    double ans = double(error_cnt) / double(receive_cnt);
+    error_cnt = 0;
+    receive_cnt = 0;
+    return ans;
+}
 //extern VideoChat demo;
