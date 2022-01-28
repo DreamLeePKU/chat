@@ -38,6 +38,7 @@ extern QAtomicInteger<bool> rate_ok;
 #include <opencv2/highgui.hpp>
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include <opencv2\imgproc\types_c.h>
 //using namespace cv;
 
 //using namespace boost::asio;
@@ -73,7 +74,7 @@ public:
 
   VideoChat(std::string ip1 = "127.0.0.1");
   void send();
-  void recv();
+  cv::Mat recv();
   void start();
   cv::Mat get_frame();
   double receive_error_rate();

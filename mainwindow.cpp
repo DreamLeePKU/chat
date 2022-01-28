@@ -2,7 +2,6 @@
 #include <QtDebug>
 #include <QInputDialog>
 //#include "ui_mainwindow.h"
-#include <opencv2\imgproc\types_c.h>
 //#include "receiver.cpp"
 //#include "send_thread.h"
 
@@ -41,10 +40,6 @@ Chat::Chat(QWidget *parent)
     connect(ui->set_frame_rate_btn, &QPushButton::clicked, this, &Chat::set_frame_rate);
     connect(this, &Chat::got_ip, this, &Chat::send_thread_start);
     sharedMemory = new QSharedMemory("frame_rate", this);
-
-//    connect(ui->pushButton, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
-//    connect(ui->checkBox, &QPushButton::clicked, this, &Chat::on_pushButton_clicked);
-//    connect(ui->checkBox, &QCheckBox::toggled, this, &Chat::on_checkBox_clicked);
 }
 
 void Chat::send_thread_start() {
@@ -69,8 +64,8 @@ void Chat::paintEvent(QPaintEvent * /*e */) {
 
 void Chat::updataImage() {
     if(!ready) return;
-//    std::cout << "u";
     cap >> srcImg_local;
+//    std::cout << "u";
     srcImg = demo.get_frame();
     if(srcImg.data) {
         cvtColor(srcImg, srcImg, CV_BGR2RGB);

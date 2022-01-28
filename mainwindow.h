@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QImage>
 #include <opencv.hpp>
+#include <opencv2\imgproc\types_c.h>
 #include <QSharedMemory>
 #include "ui_mainwindow.h"
 //#include "send_thread.h"

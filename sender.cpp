@@ -10,18 +10,14 @@ Sender::Sender(std::string ip1):
   ep1(boost::asio::ip::address::from_string(ip1), port1),
   // ep2(ip::address::from_string(ip1), port2),
   recvSocket(sender_ioc, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port3)),
-  sendSocket(sender_ioc, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port4))
-
-{
-
-  memset(recv_data, 0, sizeof(recv_data));
+  sendSocket(sender_ioc, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port4))  {
+    memset(recv_data, 0, sizeof(recv_data));
 }
 
 int Sender::get_frame_rate() {
 //    return 3;
     QString sharedMessage;
     QSharedMemory* sharedMemory = new QSharedMemory("frame_rate");
-//    QSharedMemory* sharedMemory = new QSharedMemory("framerate", this);
     sharedMemory->attach();
     sharedMemory->lock();
     QByteArray sharedData(sharedMemory->size(), '\0');

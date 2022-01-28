@@ -18,6 +18,8 @@ Mat传输大的
 
 一帧：921600Byte 
 
+rgb bgr没有转换？Mat传引用
+
 cmd
 
 ```
